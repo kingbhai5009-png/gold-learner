@@ -22,6 +22,98 @@ canvas{width:100%;background:#111;border-radius:10px}
 label{display:block;margin-top:10px}
 </style>
 </head>
+<!-- GOLD LEARNER NATURE MUSIC -->
+
+<div id="goldNaturePanel">
+
+<h3>🌳 Nature World 🐦</h3>
+
+<button onclick="goldNaturePlay()">
+▶️ Play
+</button>
+
+<button onclick="goldNaturePause()">
+⏸️ Pause
+</button>
+
+<br><br>
+
+<label>🔊 Volume</label>
+
+<input
+type="range"
+min="0"
+max="1"
+step="0.01"
+value="0.25"
+oninput="goldNatureVolume(this.value)"
+>
+
+</div>
+
+<audio
+id="goldNatureAudio"
+src="music/nature.mp3"
+loop
+preload="auto">
+</audio>
+
+<style>
+
+#goldNaturePanel {
+position:fixed;
+bottom:15px;
+right:12px;
+z-index:99999;
+background:#123d27;
+color:white;
+padding:15px;
+border-radius:15px;
+border:2px solid gold;
+text-align:center;
+box-shadow:0 0 15px #00ff66;
+}
+
+#goldNaturePanel button {
+background:gold;
+color:black;
+border:0;
+padding:9px;
+margin:4px;
+border-radius:8px;
+font-weight:bold;
+}
+
+</style>
+
+<script>
+
+const goldNatureAudio =
+document.getElementById("goldNatureAudio");
+
+goldNatureAudio.volume = 0.25;
+
+function goldNaturePlay() {
+
+goldNatureAudio.play();
+
+}
+
+function goldNaturePause() {
+
+goldNatureAudio.pause();
+
+}
+
+function goldNatureVolume(value) {
+
+goldNatureAudio.volume = value;
+
+}
+
+</script>
+
+<!-- END NATURE MUSIC -->
 <body>
 
 <header>🥇 GOLD LEARNER</header>
