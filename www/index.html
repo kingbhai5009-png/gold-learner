@@ -1,0 +1,352 @@
+cat > index.html <<'EOF'
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GOLD LEARNER</title>
+<style>
+*{box-sizing:border-box}
+body{background:#101010;color:white;font-family:Arial;padding:12px;margin:0}
+header{text-align:center;color:gold;font-size:27px;font-weight:bold;padding:18px}
+.box{background:#222;padding:16px;border-radius:14px;margin:13px 0}
+button,input{width:100%;padding:12px;margin:6px 0;border:0;border-radius:8px;font-size:16px}
+button{background:gold;color:black;font-weight:bold}
+input{background:#333;color:white}
+nav{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.hidden{display:none}
+.result{color:gold;font-size:18px;padding:10px;overflow-wrap:anywhere}
+.pattern{background:#333;padding:12px;border-radius:10px;margin:8px 0}
+.pattern h3{color:gold}
+canvas{width:100%;background:#111;border-radius:10px}
+label{display:block;margin-top:10px}
+</style>
+</head>
+<body>
+
+<header>🥇 GOLD LEARNER</header>
+
+<nav>
+<button onclick="show('lot')">🥇 Gold Lot</button>
+<button onclick="show('currency')">💵 USD INR</button>
+<button onclick="show('chart')">📈 Chart</button>
+<button onclick="show('patterns')">📊 Patterns</button>
+<button onclick="show('music')">🎵 Music</button>
+<button onclick="show('settings')">⚙️ Settings</button>
+</nav>
+
+<div class="box" id="lot">
+<h2>🥇 Gold Lot Calculator</h2>
+<label>Gold Price (USD)</label>
+<input id="goldPrice" type="number" value="4000">
+<label>Contract Size (oz)</label>
+<input id="contract" type="number" value="100">
+<label>Lot Size</label>
+<input id="lotSize" type="number" value="0.01" step="0.01">
+<label>USD to INR</label>
+<input id="lotRate" type="number" value="94.26">
+<button onclick="calculateLot()">CALCULATE</button>
+<div class="result" id="lotResult"></div>
+<p>यह अनुमानित contract value है, margin या profit नहीं।</p>
+</div>
+
+<div class="box hidden" id="currency">
+<h2>💵 Dollar to INR</h2>
+<label>Dollar</label>
+<input id="usd" type="number" value="1">
+<label>Rate</label>
+<input id="rate" type="number" value="94.26">
+<button onclick="convert()">CONVERT</button>
+<button onclick="liveRate()">LIVE RATE UPDATE</button>
+<div class="result" id="inr"></div>
+<div id="rateStatus"></div>
+</div>
+
+<div class="box hidden" id="chart">
+<h2>📈 Candlestick Practice Chart</h2>
+<canvas id="candleChart" width="600" height="350"></canvas>
+<button onclick="newChart()">NEW CHART</button>
+<p>यह अभ्यास के लिए काल्पनिक चार्ट है, लाइव मार्केट डेटा नहीं।</p>
+</div>
+
+<div class="box hidden" id="patterns">
+<h2>📊 Candlestick Patterns</h2>
+<input id="search" placeholder="Search Pattern..." oninput="searchPattern()">
+<div id="patternList"></div>
+</div>
+
+<div class="box hidden" id="music">
+<h2>🧠 Mind Relaxing Music</h2>
+<p>Peaceful Piano & Focus Music</p>
+<button onclick="playSong()">▶ PLAY MUSIC</button>
+<button onclick="pauseSong()">⏸ PAUSE MUSIC</button>
+<label>🔊 Volume</label>
+<input type="range" min="0" max="100" value="50" oninput="setVolume(this.value)">
+<div id="musicStatus">Music Ready 🎵</div>
+</div>
+
+<div class="box hidden" id="settings">
+<h2>⚙️ Settings</h2>
+<button onclick="toggleTheme()">Change Theme</button>
+<button onclick="resetApp()">Reset Calculator</button>
+</div>
+
+<script>
+function show(id){
+['lot','currency','chart','patterns','music','settings'].forEach(x=>
+document.getElementById(x).classList.add('hidden'));
+document.getElementById(id).classList.remove('hidden');
+if(id==='patterns')displayPatterns(patterns);
+if(id==='chart')drawChart();
+}
+
+function calculateLot(){
+let p=+goldPrice.value,c=+contract.value,l=+lotSize.value,r=+lotRate.value;
+if(p<=0||c<=0||l<=0||r<=0){alert('सही वैल्यू डालें');return}
+let q=c*l,v=q*p,ru=v*r;
+lotResult.innerHTML='Gold Quantity: '+q+' oz<br>USD Value: $'+v.toFixed(2)+'<br>INR Value: ₹'+ru.toLocaleString('en-IN',{maximumFractionDigits:2});
+}
+
+function convert(){
+inr.innerHTML='₹'+(Number(usd.value)*Number(rate.value)).toLocaleString('en-IN',{maximumFractionDigits:2});
+}
+
+async function liveRate(){
+rateStatus.innerText='Updating...';
+try{
+let res=await fetch('https://open.er-api.com/v6/latest/USD');
+let d=await res.json();
+if(!d.rates.INR)throw Error();
+rate.value=d.rates.INR.toFixed(2);
+lotRate.value=d.rates.INR.toFixed(2);
+convert();calculateLot();
+rateStatus.innerText='Live rate updated';
+}catch(e){rateStatus.innerText='Internet या API उपलब्ध नहीं है';}
+}
+
+// ORIGINAL GENERATED RELAXING MUSIC
+let audioCtx=null,master=null,oscillators=[],musicTimer=null;
+let musicPlaying=false;
+let notes=[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23];
+let noteIndex=0;
+
+function playSong(){
+if(musicPlaying)return;
+let AC=window.AudioContext||window.webkitAudioContext;
+if(!AC){musicStatus.innerText='Audio supported नहीं है';return}
+if(!audioCtx){
+audioCtx=new AC();
+master=audioCtx.createGain();
+master.gain.value=.5;
+master.connect(audioCtx.destination);
+}
+audioCtx.resume();
+musicPlaying=true;
+musicStatus.innerText='🎵 Peaceful Music Playing';
+playNote();
+}
+
+function playNote(){
+if(!musicPlaying)return;
+let now=audioCtx.currentTime;
+let freq=notes[noteIndex%notes.length];
+noteIndex++;
+let osc=audioCtx.createOscillator();
+let gain=audioCtx.createGain();
+osc.type='sine';
+osc.frequency.value=freq;
+gain.gain.setValueAtTime(0.0001,now);
+gain.gain.exponentialRampToValueAtTime(.10,now+.5);
+gain.gain.exponentialRampToValueAtTime(.0001,now+3);
+osc.connect(gain);
+gain.connect(master);
+osc.start(now);
+osc.stop(now+3.1);
+musicTimer=setTimeout(playNote,2200);
+}
+
+function pauseSong(){
+musicPlaying=false;
+clearTimeout(musicTimer);
+if(audioCtx)audioCtx.suspend();
+musicStatus.innerText='⏸ Music Paused';
+}
+
+function setVolume(v){
+if(master)master.gain.value=v/100;
+}
+
+function toggleTheme(){
+document.body.classList.toggle('light');
+if(document.body.classList.contains('light')){
+document.body.style.background='#eee';
+document.body.style.color='#111';
+}else{
+document.body.style.background='#101010';
+document.body.style.color='white';
+}
+}
+
+function resetApp(){
+goldPrice.value=4000;contract.value=100;lotSize.value=.01;lotRate.value=94.26;
+usd.value=1;rate.value=94.26;
+calculateLot();convert();
+}
+
+const patterns=[
+["Doji","Open और Close लगभग बराबर।"],
+["Dragonfly Doji","नीचे लंबी wick।"],
+["Gravestone Doji","ऊपर लंबी wick।"],
+["Long Legged Doji","दोनों तरफ लंबी wick।"],
+["Hammer","Downtrend के बाद संभावित bullish reversal।"],
+["Hanging Man","Uptrend के बाद संभावित कमजोरी।"],
+["Shooting Star","ऊपर लंबी wick।"],
+["Inverted Hammer","संभावित bullish reversal।"],
+["Bullish Engulfing","Bullish candle पिछली bearish body को ढकती है।"],
+["Bearish Engulfing","Bearish candle पिछली bullish body को ढकती है।"],
+["Morning Star","तीन candle का bullish setup।"],
+["Evening Star","तीन candle का bearish setup।"],
+["Three White Soldiers","तीन मजबूत bullish candles।"],
+["Three Black Crows","तीन मजबूत bearish candles।"],
+["Spinning Top","छोटी body और wicks।"],
+["Bullish Harami","छोटी bullish candle पिछली बड़ी candle के अंदर।"],
+["Bearish Harami","छोटी bearish candle पिछली बड़ी candle के अंदर।"],
+["Piercing Line","संभावित bullish reversal।"],
+["Dark Cloud Cover","संभावित bearish reversal।"],
+["Tweezer Bottom","लगभग समान lows।"],
+["Tweezer Top","लगभग समान highs।"],
+["Rising Three Methods","Bullish continuation।"],
+["Falling Three Methods","Bearish continuation।"],
+["Bullish Marubozu","मजबूत bullish candle।"],
+["Bearish Marubozu","मजबूत bearish candle।"],
+["Inside Bar","अगली candle पिछली range के अंदर।"],
+["Outside Bar","अगली candle पिछली range से बाहर।"],
+["Bullish Pin Bar","नीचे rejection।"],
+["Bearish Pin Bar","ऊपर rejection।"],
+["Morning Doji Star","Doji वाला Morning Star।"],
+["Evening Doji Star","Doji वाला Evening Star।"],
+["Three Inside Up","Bullish confirmation setup।"],
+["Three Inside Down","Bearish confirmation setup।"],
+["Three Outside Up","Bullish setup।"],
+["Three Outside Down","Bearish setup।"],
+["Abandoned Baby","Rare reversal pattern।"],
+["Tri-Star","तीन Doji वाला pattern।"],
+["Mat Hold","Bullish continuation।"],
+["Upside Tasuki Gap","Bullish continuation।"],
+["Downside Tasuki Gap","Bearish continuation।"],
+["Stick Sandwich","Potential reversal।"],
+["Matching Low","दो candles के lows लगभग समान।"],
+["Matching High","दो candles के highs लगभग समान।"],
+["Belt Hold","Strong directional candle।"],
+["Breakaway","Potential reversal pattern।"],
+["Runaway Gap","Trend continuation gap।"],
+["Exhaustion Gap","Trend exhaustion का संभावित संकेत।"],
+["Island Reversal","Gap आधारित reversal।"],
+["Railroad Tracks","दो बड़ी opposite candles।"],
+["NR4","चार candles में सबसे छोटी range।"],
+["NR7","सात candles में सबसे छोटी range।"],
+["Bullish Fakey","False breakout के बाद bullish move।"],
+["Bearish Fakey","False breakout के बाद bearish move।"],
+["Hammer Doji","Doji और लंबी lower wick।"],
+["Inverted Hammer Doji","Doji और लंबी upper wick।"],
+["Long White Candle","लंबी bullish body।"],
+["Long Black Candle","लंबी bearish body।"],
+["Short White Candle","छोटी bullish body।"],
+["Short Black Candle","छोटी bearish body।"],
+["High Wave","लंबी wicks।"],
+["Bullish Kicker","Strong bullish shift।"],
+["Bearish Kicker","Strong bearish shift।"],
+["Pipe Bottom","Potential bottom reversal।"],
+["Pipe Top","Potential top reversal।"],
+["Counterattack Lines","Opposite direction की strong candles।"],
+["On Neck Line","Bearish continuation tendency।"],
+["In Neck Line","Bearish continuation tendency।"],
+["Thrusting Line","Bearish continuation tendency।"],
+["Separating Lines","Trend continuation setup।"],
+["Three Line Strike","चार candle का setup।"],
+["Concealing Baby Swallow","Rare bearish pattern।"],
+["Ladder Bottom","Potential bullish reversal।"],
+["Upside Gap Two Crows","Potential bearish reversal।"],
+["Three Stars in the South","Rare bullish reversal।"],
+["Four Price Doji","बहुत कम price movement।"],
+["Closing Marubozu","Close के पास wick कम।"],
+["Opening Marubozu","Open के पास wick कम।"],
+["Double Doji","दो Doji candles।"],
+["Three Doji","तीन Doji candles।"],
+["Bullish Belt Hold","Bullish opening pattern।"],
+["Bearish Belt Hold","Bearish opening pattern।"],
+["Bullish Outside Bar","Bullish outside candle।"],
+["Bearish Outside Bar","Bearish outside candle।"],
+["Bullish Gap","ऊपर की ओर gap।"],
+["Bearish Gap","नीचे की ओर gap।"],
+["Bullish Reversal Doji","Support पर Doji।"],
+["Bearish Reversal Doji","Resistance पर Doji।"],
+["Bullish Island","Bullish island formation।"],
+["Bearish Island","Bearish island formation।"],
+["Gap Side-by-Side","Gap के बाद समान candles।"],
+["Bullish Three Gap","तीन bullish gaps।"],
+["Bearish Three Gap","तीन bearish gaps।"],
+["Bullish Harami Cross","Bullish Harami में Doji।"],
+["Bearish Harami Cross","Bearish Harami में Doji।"],
+["Dark Cloud","Bearish reversal setup।"],
+["Piercing Pattern","Bullish reversal setup।"],
+["Tweezer Reversal","समान highs या lows।"],
+["Bullish Engulfing Plus","Engulfing के साथ confirmation।"],
+["Bearish Engulfing Plus","Engulfing के साथ confirmation।"]
+];
+
+function displayPatterns(list){
+patternList.innerHTML=list.map((p,i)=>'<div class="pattern"><h3>'+ (i+1)+'. '+p[0]+'</h3><p>'+p[1]+'</p></div>').join('');
+}
+
+function searchPattern(){
+let q=search.value.toLowerCase();
+displayPatterns(patterns.filter(p=>p[0].toLowerCase().includes(q)||p[1].toLowerCase().includes(q)));
+}
+
+let chartData=[];
+function newChart(){
+chartData=[];
+let price=4000;
+for(let i=0;i<30;i++){
+let open=price;
+let close=open+(Math.random()-.48)*25;
+let high=Math.max(open,close)+Math.random()*12;
+let low=Math.min(open,close)-Math.random()*12;
+chartData.push({open,close,high,low});
+price=close;
+}
+drawChart();
+}
+
+function drawChart(){
+let c=document.getElementById('candleChart');
+let ctx=c.getContext('2d');
+ctx.clearRect(0,0,c.width,c.height);
+if(!chartData.length)newChartData();
+let min=Math.min(...chartData.map(x=>x.low));
+let max=Math.max(...chartData.map(x=>x.high));
+let y=v=>320-(v-min)/(max-min||1)*280;
+chartData.forEach((d,i)=>{
+let x=15+i*19;
+let color=d.close>=d.open?'#00d68f':'#ff4545';
+ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(x+5,y(d.high));ctx.lineTo(x+5,y(d.low));ctx.stroke();
+ctx.fillRect(x,y(Math.max(d.open,d.close)),10,Math.max(2,Math.abs(y(d.open)-y(d.close))));
+});
+}
+
+function newChartData(){
+let p=4000;
+chartData=Array.from({length:30},()=>{
+let o=p,cl=o+(Math.random()-.5)*20;
+let h=Math.max(o,cl)+Math.random()*8,l=Math.min(o,cl)-Math.random()*8;
+p=cl;return {open:o,close:cl,high:h,low:l};
+});
+}
+
+calculateLot();convert();
+</script>
+</body>
+</html>
+EOF
