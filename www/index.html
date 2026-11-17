@@ -6,19 +6,36 @@
 <title>GOLD LEARNER</title>
 <style>
 *{box-sizing:border-box}
-body{background:#101010;color:white;font-family:Arial;padding:12px;margin:0}
-header{text-align:center;color:gold;font-size:27px;font-weight:bold;padding:18px}
-.box{background:#222;padding:16px;border-radius:14px;margin:13px 0}
+:root{
+--bg:#101010;--panel:#222;--button:#ffd700;--buttonText:#111;
+--input:#333;--text:#fff;--accent:#ffd700;--pattern:#333;
+}
+body{background:var(--bg);color:var(--text);font-family:Arial;padding:12px;margin:0;transition:background .2s,color .2s}
+body[data-theme="ocean"]{--bg:#071b2b;--panel:#102d43;--button:#29b6f6;--buttonText:#061521;--input:#173d58;--accent:#4dd0e1;--pattern:#173d58}
+body[data-theme="forest"]{--bg:#071b12;--panel:#123d27;--button:#43c779;--buttonText:#071b12;--input:#1d4932;--accent:#80e6a4;--pattern:#1d4932}
+body[data-theme="purple"]{--bg:#170d28;--panel:#2c1945;--button:#b388ff;--buttonText:#160b25;--input:#40285e;--accent:#d0b3ff;--pattern:#40285e}
+body[data-theme="light"]{--bg:#f2f2f2;--panel:#fff;--button:#e0b800;--buttonText:#111;--input:#e8e8e8;--text:#171717;--accent:#987500;--pattern:#eee}
+body[data-theme="red"]{--bg:#210b0b;--panel:#3b1717;--button:#ff5252;--buttonText:#210b0b;--input:#522222;--accent:#ff8a80;--pattern:#522222}
+header{text-align:center;color:var(--accent);font-size:27px;font-weight:bold;padding:18px}
+.box{background:var(--panel);color:var(--text);padding:16px;border-radius:14px;margin:13px 0}
 button,input{width:100%;padding:12px;margin:6px 0;border:0;border-radius:8px;font-size:16px}
-button{background:gold;color:black;font-weight:bold}
-input{background:#333;color:white}
-nav{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.hidden{display:none}
-.result{color:gold;font-size:18px;padding:10px;overflow-wrap:anywhere}
-.pattern{background:#333;padding:12px;border-radius:10px;margin:8px 0}
-.pattern h3{color:gold}
-canvas{width:100%;background:#111;border-radius:10px}
+button{background:var(--button);color:var(--buttonText);font-weight:bold;cursor:pointer}
+input{background:var(--input);color:var(--text)}
+nav{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+nav button{min-height:58px;font-size:17px}
+.hidden{display:none!important}
+.result{color:var(--accent);font-size:18px;padding:10px;overflow-wrap:anywhere}
+.pattern{background:var(--pattern);padding:12px;border-radius:10px;margin:8px 0}
+.pattern h3{color:var(--accent)}
+canvas{width:100%;background:var(--input);border-radius:10px}
 label{display:block;margin-top:10px}
+.topbar{display:flex;justify-content:flex-end;align-items:center}
+.topbar button{width:auto;min-width:120px;padding:10px 18px}
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.theme-grid button{font-size:14px}
+.section-title{color:var(--accent)}
+#goldNaturePanel{display:none!important}
+
 
 #goldLoading{
 position:fixed;inset:0;z-index:1000000;
@@ -171,15 +188,15 @@ document.addEventListener("visibilitychange", function() {
 
 <!-- END NATURE MUSIC -->
 
+<div class="topbar">
+<button onclick="show('settings')">⚙️ Settings</button>
+</div>
 <header>🥇 GOLD LEARNER</header>
-
 <nav>
 <button onclick="show('lot')">🥇 Gold Lot</button>
 <button onclick="show('currency')">💵 USD INR</button>
 <button onclick="show('chart')">📈 Chart</button>
 <button onclick="show('patterns')">📊 Patterns</button>
-<button onclick="show('music')">🎵 Music</button>
-<button onclick="show('settings')">⚙️ Settings</button>
 </nav>
 
 <div class="box" id="lot">
@@ -222,31 +239,54 @@ document.addEventListener("visibilitychange", function() {
 <div id="patternList"></div>
 </div>
 
-<div class="box hidden" id="music">
-<h2>🧠 Mind Relaxing Music</h2>
-<p>Peaceful Piano & Focus Music</p>
-<button onclick="playSong()">▶ PLAY MUSIC</button>
-<button onclick="pauseSong()">⏸ PAUSE MUSIC</button>
-<label>🔊 Volume</label>
-<input type="range" min="0" max="100" value="50" oninput="setVolume(this.value)">
-<div id="musicStatus">Music Ready 🎵</div>
-</div>
-
 <div class="box hidden" id="settings">
 <h2>⚙️ Settings</h2>
-<button onclick="toggleTheme()">Change Theme</button>
-<button onclick="resetApp()">Reset Calculator</button>
+
+<h3 class="section-title">🎨 Choose App Theme</h3>
+<div class="theme-grid">
+<button onclick="setTheme('gold')">🥇 Gold Black</button>
+<button onclick="setTheme('ocean')">🌊 Ocean Blue</button>
+<button onclick="setTheme('forest')">🌳 Forest Green</button>
+<button onclick="setTheme('purple')">👑 Royal Purple</button>
+<button onclick="setTheme('light')">☀️ Light White</button>
+<button onclick="setTheme('red')">🔴 Midnight Red</button>
+</div>
+<div id="themeStatus" class="result">Theme selected</div>
+
+<hr>
+<h3 class="section-title">🌳 Nature World Music</h3>
+<button onclick="goldNaturePlay()">▶️ Play Nature Music</button>
+<button onclick="goldNaturePause()">⏸️ Pause Nature Music</button>
+<label>🔊 Nature Music Volume</label>
+<input id="natureVolume" type="range" min="0" max="1" step="0.01" value="0.25"
+oninput="goldNatureVolume(this.value)">
+
+<hr>
+<h3 class="section-title">🎹 Peaceful Piano Music</h3>
+<button onclick="playSong()">▶ PLAY MUSIC</button>
+<button onclick="pauseSong()">⏸ PAUSE MUSIC</button>
+<label>🔊 Piano Music Volume</label>
+<input id="pianoVolume" type="range" min="0" max="100" value="50"
+oninput="setVolume(this.value)">
+<div id="musicStatus" class="result">Music Ready 🎵</div>
+
+<hr>
+<button onclick="resetApp()">🔄 Reset Calculator</button>
 </div>
 
 <script>
 function show(id){
-document.getElementById('goldNaturePanel').style.display =
-id === 'music' ? 'block' : 'none';
-['lot','currency','chart','patterns','music','settings'].forEach(x=>
-document.getElementById(x).classList.add('hidden'));
+const pages=['lot','currency','chart','patterns','settings'];
+if(!pages.includes(id)) return;
+pages.forEach(x=>document.getElementById(x).classList.add('hidden'));
 document.getElementById(id).classList.remove('hidden');
 if(id==='patterns')displayPatterns(patterns);
+if(id==='settings'){
+const slider=document.getElementById('natureVolume');
+if(slider && window.goldNatureAudio)slider.value=window.goldNatureAudio.volume;
+}
 if(id==='chart')drawChart();
+window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function calculateLot(){
@@ -325,20 +365,34 @@ function setVolume(v){
 if(master)master.gain.value=v/100;
 }
 
-function toggleTheme(){
-document.body.classList.toggle('light');
-if(document.body.classList.contains('light')){
-document.body.style.background='#eee';
-document.body.style.color='#111';
-}else{
-document.body.style.background='#101010';
-document.body.style.color='white';
+function setTheme(theme){
+const allowed=['gold','ocean','forest','purple','light','red'];
+if(!allowed.includes(theme))theme='gold';
+document.body.setAttribute('data-theme',theme);
+try{localStorage.setItem('goldLearnerTheme',theme);}catch(e){}
+const names={gold:'Gold Black',ocean:'Ocean Blue',forest:'Forest Green',
+purple:'Royal Purple',light:'Light White',red:'Midnight Red'};
+const status=document.getElementById('themeStatus');
+if(status)status.innerText='Selected Theme: '+names[theme];
 }
+
+function loadTheme(){
+let saved='gold';
+try{saved=localStorage.getItem('goldLearnerTheme')||'gold';}catch(e){}
+setTheme(saved);
+}
+
+function toggleTheme(){
+const themes=['gold','ocean','forest','purple','light','red'];
+const current=document.body.getAttribute('data-theme')||'gold';
+setTheme(themes[(themes.indexOf(current)+1)%themes.length]);
+
 }
 
 function resetApp(){
 goldPrice.value=4000;contract.value=100;lotSize.value=.01;lotRate.value=94.26;
 usd.value=1;rate.value=94.26;
+loadTheme();
 calculateLot();convert();
 }
 
