@@ -137,23 +137,35 @@ document.getElementById("goldNatureAudio");
 
 goldNatureAudio.volume = 0.25;
 
+window.goldNatureStart = function() {
+    goldNatureAudio.play().catch(function(error) {
+        console.log("Nature music could not start:", error);
+    });
+};
+
+window.goldNaturePause = function() {
+    goldNatureAudio.pause();
+};
+
 function goldNaturePlay() {
-
-goldNatureAudio.play();
-
-}
-
-function goldNaturePause() {
-
-goldNatureAudio.pause();
-
+    window.goldNatureStart();
 }
 
 function goldNatureVolume(value) {
-
-goldNatureAudio.volume = value;
-
+    goldNatureAudio.volume = value;
 }
+
+window.addEventListener("load", function() {
+    window.goldNatureStart();
+});
+
+document.addEventListener("visibilitychange", function() {
+    if (document.hidden) {
+        window.goldNaturePause();
+    } else {
+        window.goldNatureStart();
+    }
+});
 
 </script>
 
