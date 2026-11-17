@@ -2,7 +2,7 @@
 
 const P = (name, desc, ...c) => ({name, desc, c});
 
-const patterns = [
+const candleDataPatterns = [
 
 P("Doji","Open और Close लगभग बराबर।", [50,90,10,50]),
 
@@ -270,3 +270,5 @@ P("Bearish Spinning Top","छोटी लाल Body और दोनों त
 P("High Wave Candle","बहुत छोटी Body और लंबी ऊपर-नीचे Wick।",
 [50,85,15,52]),
 
+
+];
