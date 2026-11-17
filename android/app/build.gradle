@@ -4,7 +4,7 @@ android {
     namespace = "com.kingbhai.goldlearner"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.kingbhai.goldlearner"
+        applicationId "com.kingbhai.goldlearner.newapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
