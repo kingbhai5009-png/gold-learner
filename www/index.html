@@ -61,6 +61,7 @@ preload="auto">
 <style>
 
 #goldNaturePanel {
+display:none;
 position:fixed;
 bottom:15px;
 right:12px;
@@ -184,6 +185,8 @@ goldNatureAudio.volume = value;
 
 <script>
 function show(id){
+document.getElementById('goldNaturePanel').style.display =
+id === 'music' ? 'block' : 'none';
 ['lot','currency','chart','patterns','music','settings'].forEach(x=>
 document.getElementById(x).classList.add('hidden'));
 document.getElementById(id).classList.remove('hidden');
