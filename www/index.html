@@ -85,7 +85,7 @@ type="range"
 min="0"
 max="1"
 step="0.01"
-value="0.25"
+value="1"
 oninput="goldNatureVolume(this.value)"
 >
 
@@ -132,7 +132,7 @@ font-weight:bold;
 const goldNatureAudio =
 document.getElementById("goldNatureAudio");
 
-goldNatureAudio.volume = 0.25;
+goldNatureAudio.volume = 1;
 
 window.goldNatureStart = function() {
     goldNatureAudio.play().catch(function(error) {
@@ -249,17 +249,8 @@ document.addEventListener("visibilitychange", function() {
 <button onclick="goldNaturePlay()">▶️ Play Nature Music</button>
 <button onclick="goldNaturePause()">⏸️ Pause Nature Music</button>
 <label>🔊 Nature Music Volume</label>
-<input id="natureVolume" type="range" min="0" max="1" step="0.01" value="0.25"
+<input id="natureVolume" type="range" min="0" max="1" step="0.01" value="1"
 oninput="goldNatureVolume(this.value)">
-
-<hr>
-<h3 class="section-title">🎹 Peaceful Piano Music</h3>
-<button onclick="playSong()">▶ PLAY MUSIC</button>
-<button onclick="pauseSong()">⏸ PAUSE MUSIC</button>
-<label>🔊 Piano Music Volume</label>
-<input id="pianoVolume" type="range" min="0" max="100" value="50"
-oninput="setVolume(this.value)">
-<div id="musicStatus" class="result">Music Ready 🎵</div>
 
 <hr>
 <button onclick="resetApp()">🔄 Reset Calculator</button>
@@ -309,58 +300,6 @@ lotRate.value=d.rates.INR.toFixed(2);
 convert();calculateLot();
 rateStatus.innerText='Live rate updated';
 }catch(e){rateStatus.innerText='Internet या API उपलब्ध नहीं है';}
-}
-
-// ORIGINAL GENERATED RELAXING MUSIC
-let audioCtx=null,master=null,oscillators=[],musicTimer=null;
-let musicPlaying=false;
-let notes=[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23];
-let noteIndex=0;
-
-function playSong(){
-if(musicPlaying)return;
-let AC=window.AudioContext||window.webkitAudioContext;
-if(!AC){musicStatus.innerText='Audio supported नहीं है';return}
-if(!audioCtx){
-audioCtx=new AC();
-master=audioCtx.createGain();
-master.gain.value=.5;
-master.connect(audioCtx.destination);
-}
-audioCtx.resume();
-musicPlaying=true;
-musicStatus.innerText='🎵 Peaceful Music Playing';
-playNote();
-}
-
-function playNote(){
-if(!musicPlaying)return;
-let now=audioCtx.currentTime;
-let freq=notes[noteIndex%notes.length];
-noteIndex++;
-let osc=audioCtx.createOscillator();
-let gain=audioCtx.createGain();
-osc.type='sine';
-osc.frequency.value=freq;
-gain.gain.setValueAtTime(0.0001,now);
-gain.gain.exponentialRampToValueAtTime(.10,now+.5);
-gain.gain.exponentialRampToValueAtTime(.0001,now+3);
-osc.connect(gain);
-gain.connect(master);
-osc.start(now);
-osc.stop(now+3.1);
-musicTimer=setTimeout(playNote,2200);
-}
-
-function pauseSong(){
-musicPlaying=false;
-clearTimeout(musicTimer);
-if(audioCtx)audioCtx.suspend();
-musicStatus.innerText='⏸ Music Paused';
-}
-
-function setVolume(v){
-if(master)master.gain.value=v/100;
 }
 
 function setTheme(theme){
