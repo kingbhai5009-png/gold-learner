@@ -49,6 +49,91 @@ label{display:block;margin-top:10px}
 #goldLoading.hide{opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s}
 @media(max-width:380px){body{padding:10px}.nav-row{gap:5px}.nav-row button{min-width:70px;padding:10px 5px;font-size:11px}}
 
+
+/* ===== GOLD LEARNER HOME REDESIGN ===== */
+:root{
+  --bg:#ead9b8;--panel:#fff4dc;--button:#7d241f;--buttonText:#fff7e8;
+  --input:#f7e8ca;--text:#39251b;--accent:#9a6517;--pattern:#f4e4c5;
+}
+body{
+  color:var(--text);
+  background:
+    radial-gradient(ellipse at 12% 12%,rgba(151,45,36,.12),transparent 25%),
+    radial-gradient(ellipse at 88% 82%,rgba(151,45,36,.10),transparent 24%),
+    repeating-linear-gradient(0deg,rgba(112,77,35,.035) 0,rgba(112,77,35,.035) 1px,transparent 1px,transparent 5px),
+    linear-gradient(135deg,#f4e6c9,#dfc59a);
+}
+body[data-theme="ocean"]{--bg:#071b2b;--panel:#102d43;--button:#29b6f6;--buttonText:#061521;--input:#173d58;--text:#fff;--accent:#4dd0e1;--pattern:#173d58}
+body[data-theme="forest"]{--bg:#071b12;--panel:#123d27;--button:#43c779;--buttonText:#071b12;--input:#1d4932;--text:#fff;--accent:#80e6a4;--pattern:#1d4932}
+body[data-theme="purple"]{--bg:#170d28;--panel:#2c1945;--button:#b388ff;--buttonText:#160b25;--input:#40285e;--text:#fff;--accent:#d0b3ff;--pattern:#40285e}
+body[data-theme="light"]{--bg:#f2f2f2;--panel:#fff;--button:#e0b800;--buttonText:#111;--input:#e8e8e8;--text:#171717;--accent:#987500;--pattern:#eee}
+body[data-theme="red"]{--bg:#210b0b;--panel:#3b1717;--button:#ff5252;--buttonText:#210b0b;--input:#522222;--text:#fff;--accent:#ff8a80;--pattern:#522222}
+body[data-theme="gold"]{--bg:#ead9b8;--panel:#fff4dc;--button:#7d241f;--buttonText:#fff7e8;--input:#f7e8ca;--text:#39251b;--accent:#9a6517;--pattern:#f4e4c5}
+.topbar{
+  max-width:900px;margin:0 auto 10px;display:flex;
+  justify-content:space-between;align-items:center;gap:12px;
+}
+.topbar button{width:auto;min-width:0;margin:0;padding:10px 15px;border:1px solid #d5ad58;
+  border-radius:12px;box-shadow:0 4px 10px #542b1c25}
+.home-screen{max-width:900px;margin:0 auto;padding:4px 2px 24px}
+.brand-heading{
+  text-align:center;padding:20px 10px 15px;margin:0 auto 14px;
+  border:2px solid #b88735;border-radius:22px;
+  background:linear-gradient(145deg,rgba(255,249,231,.92),rgba(237,214,171,.92));
+  box-shadow:0 8px 22px #5a351b25,inset 0 0 0 4px rgba(255,255,255,.38);
+}
+.brand-heading header{
+  color:#8d5314;font-size:clamp(29px,7vw,43px);font-weight:900;
+  letter-spacing:1.5px;padding:4px 2px 5px;text-shadow:1px 2px #fff2cf;
+}
+.brand-subtitle{font-size:clamp(11px,3vw,14px);font-weight:700;letter-spacing:.5px;color:#68472c}
+.made-by{
+  display:inline-block;margin-top:14px;padding:9px 23px;border:2px solid #c39436;
+  border-radius:10px;color:#7a4811;background:linear-gradient(135deg,#fff5d7,#e8c77e);
+  font-size:15px;font-weight:900;letter-spacing:1.5px;box-shadow:0 3px 9px #7a481133;
+}
+.home-welcome{color:#68472c;text-align:center;font-weight:700;margin:8px 0 14px}
+.nav-row{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
+  overflow:visible;padding:4px 1px 12px;
+}
+.nav-row button{
+  min-width:0;min-height:88px;white-space:normal;margin:0;padding:14px 8px;
+  border:2px solid #e4c37d;border-radius:17px;font-size:clamp(14px,3.5vw,17px);
+  box-shadow:0 6px 13px #4a251d30;transition:transform .15s,filter .15s;
+}
+.nav-row button:nth-child(1){background:linear-gradient(145deg,#8d2d20,#541712);color:#fff4d8}
+.nav-row button:nth-child(2){background:linear-gradient(145deg,#278c75,#145344);color:#fff}
+.nav-row button:nth-child(3){background:linear-gradient(145deg,#2868a5,#173d70);color:#fff}
+.nav-row button:nth-child(4){background:linear-gradient(145deg,#8b55a9,#512c70);color:#fff}
+.nav-row button:active{transform:scale(.97);filter:brightness(1.12)}
+.home-card{
+  background:rgba(255,245,222,.82);color:#4a3020;border:1px solid #c89a4d;
+  border-radius:17px;padding:17px;margin-top:5px;text-align:center;
+  box-shadow:0 6px 18px #542b1c20;
+}
+.home-card h2{color:#8d5314}
+.box{background:var(--panel);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+.page-toolbar button{background:#7d241f;color:#fff7e8}
+.drawer-shade{position:fixed;inset:0;background:#160d09a8;z-index:2000000;opacity:0;visibility:hidden;transition:.2s}
+.drawer-shade.open{opacity:1;visibility:visible}
+.side-drawer{
+  position:fixed;z-index:2000001;top:0;bottom:0;left:0;width:min(82vw,310px);
+  padding:20px 16px;background:linear-gradient(160deg,#fff2d5,#dfc18d);
+  border-right:3px solid #b88735;box-shadow:8px 0 24px #0005;
+  transform:translateX(-105%);transition:transform .22s ease;overflow-y:auto;color:#42291a;
+}
+.side-drawer.open{transform:translateX(0)}
+.drawer-title{text-align:center;color:#8d5314;font-size:23px;font-weight:900;margin:14px 0 5px}
+.drawer-sub{text-align:center;color:#795735;font-size:12px;margin-bottom:18px}
+.side-drawer button{display:block;width:100%;margin:9px 0;padding:13px;border-radius:11px;background:#7d241f;color:#fff7e8}
+.drawer-close{background:#b88735!important;color:#27170e!important}
+@media(max-width:380px){
+  .nav-row{gap:9px}
+  .nav-row button{min-height:78px;padding:11px 5px;font-size:13px}
+  .brand-heading{padding:15px 7px}
+}
+
 </style>
 </head>
 <body>
@@ -131,6 +216,7 @@ font-weight:bold;
 
 const goldNatureAudio =
 document.getElementById("goldNatureAudio");
+window.goldNatureAudio = goldNatureAudio;
 
 goldNatureAudio.volume = 1;
 
@@ -169,21 +255,41 @@ document.addEventListener("visibilitychange", function() {
 <!-- END NATURE MUSIC -->
 
 <div class="home-screen" id="homeScreen">
-  <div class="topbar"><button onclick="show('settings')">⚙️ Settings</button></div>
-  <header>🥇 GOLD LEARNER</header>
+  <div class="topbar">
+    <button type="button" onclick="toggleDrawer()">☰ Menu</button>
+    <button type="button" onclick="alert('Premium features जल्द आ रहे हैं!')">👑 Premium</button>
+  </div>
+  <div class="brand-heading">
+    <header>🥇 GOLD LEARNER</header>
+    <div class="brand-subtitle">Gold Learning • USD/INR • Candlestick</div>
+    <div class="made-by">MADE BY YOGESH</div>
+  </div>
+  <div class="home-welcome">अपना Learning Section चुनें</div>
   <nav class="nav-row" aria-label="Main navigation">
-    <button onclick="show('lot')">🥇 Gold Lot</button>
-    <button onclick="show('currency')">💵 USD INR</button>
-    <button onclick="show('chart')">📈 Chart</button>
-    <button onclick="show('patterns')">📊 Pattern</button>
+    <button type="button" onclick="show('lot')">🥇<br>Gold Lot</button>
+    <button type="button" onclick="show('currency')">💵<br>USD INR</button>
+    <button type="button" onclick="show('chart')">📈<br>Chart</button>
+    <button type="button" onclick="show('patterns')">📊<br>Patterns</button>
   </nav>
   <div class="home-card">
-    <div style="font-size:42px">📊</div>
+    <div style="font-size:38px">🌹 🕯️ 🌹</div>
     <h2>Welcome to GOLD LEARNER</h2>
-    <p>अपना Learning Section चुनें। नीचे दिए गए Navigation बटन से कोई भी पेज खोलें।</p>
     <p>Learn • Practice • Analyze</p>
   </div>
 </div>
+
+<div id="drawerShade" class="drawer-shade" onclick="toggleDrawer(false)"></div>
+<aside id="sideDrawer" class="side-drawer" aria-label="App menu">
+  <div class="drawer-title">🥇 GOLD LEARNER</div>
+  <div class="drawer-sub">MADE BY YOGESH</div>
+  <button class="drawer-close" type="button" onclick="toggleDrawer(false)">✕ Close Menu</button>
+  <button type="button" onclick="drawerGo('home')">🏠 Home</button>
+  <button type="button" onclick="drawerGo('lot')">🥇 Gold Lot</button>
+  <button type="button" onclick="drawerGo('currency')">💵 USD INR</button>
+  <button type="button" onclick="drawerGo('chart')">📈 Chart</button>
+  <button type="button" onclick="drawerGo('patterns')">📊 Patterns</button>
+  <button type="button" onclick="drawerGo('settings')">⚙️ Settings</button>
+</aside>
 
 <div class="box page-screen hidden" id="lot">
 <div class="page-toolbar"><button onclick="show('home')">← Home</button><span>Gold Lot Calculator</span></div>
@@ -257,7 +363,50 @@ oninput="goldNatureVolume(this.value)">
 </div>
 
 <script>
+
+function toggleDrawer(force){
+  const drawer=document.getElementById('sideDrawer');
+  const shade=document.getElementById('drawerShade');
+  if(!drawer||!shade)return;
+  const open=typeof force==='boolean'?force:!drawer.classList.contains('open');
+  drawer.classList.toggle('open',open);
+  shade.classList.toggle('open',open);
+}
+function drawerGo(page){
+  toggleDrawer(false);
+  show(page);
+}
+
+/* A short synthesized click sound for every button; no extra audio file needed. */
+(function(){
+  let audioContext=null;
+  function playButtonClick(){
+    try{
+      const AudioCtx=window.AudioContext||window.webkitAudioContext;
+      if(!AudioCtx)return;
+      if(!audioContext)audioContext=new AudioCtx();
+      if(audioContext.state==='suspended')audioContext.resume();
+      const osc=audioContext.createOscillator();
+      const gain=audioContext.createGain();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(950,audioContext.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(620,audioContext.currentTime+0.045);
+      gain.gain.setValueAtTime(0.0001,audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.10,audioContext.currentTime+0.006);
+      gain.gain.exponentialRampToValueAtTime(0.0001,audioContext.currentTime+0.065);
+      osc.connect(gain);gain.connect(audioContext.destination);
+      osc.start();osc.stop(audioContext.currentTime+0.07);
+    }catch(error){console.log('Button click sound unavailable:',error);}
+  }
+  document.addEventListener('click',function(event){
+    const target = event.target && event.target.nodeType === 1 ? event.target : event.target.parentElement;
+    const button = target && target.closest ? target.closest('button') : null;
+    if(button && !button.disabled) playButtonClick();
+  },true);
+})();
+
 function show(id){
+  toggleDrawer(false);
 const pages=['lot','currency','chart','patterns','settings'];
 const home=document.getElementById('homeScreen');
 pages.forEach(page=>{const el=document.getElementById(page);if(el)el.classList.add('hidden');});
@@ -448,8 +597,10 @@ function drawPatternCandles(name) {
 
     const target = aliases[name] || name;
 
-    const data = candleDataPatterns.find(
-        x => clean(x.name) === clean(target)
+    const patternSource = (typeof candleDataPatterns !== "undefined" && Array.isArray(candleDataPatterns))
+        ? candleDataPatterns : [];
+    const data = patternSource.find(
+        x => x && x.name && clean(x.name) === clean(target)
     );
 
     let candles = data && data.c && data.c.length ? data.c : null;
@@ -495,7 +646,9 @@ function drawPatternCandles(name) {
 }
 
 function displayPatterns(list) {
-    patternList.innerHTML = list.map((p,i) =>
+    const patternContainer = document.getElementById('patternList');
+    if (!patternContainer) return;
+    patternContainer.innerHTML = (Array.isArray(list) ? list : []).map((p,i) =>
         '<div class="pattern">' +
         '<h3>' + (i+1) + '. ' + p[0] + '</h3>' +
         '<div class="pattern-candles">' + drawPatternCandles(p[0]) + '</div>' +
@@ -504,7 +657,8 @@ function displayPatterns(list) {
 }
 
 function searchPattern(){
-let q=search.value.toLowerCase();
+const input = document.getElementById('search');
+const q = input ? input.value.toLowerCase() : '';
 displayPatterns(patterns.filter(p=>p[0].toLowerCase().includes(q)||p[1].toLowerCase().includes(q)));
 }
 
